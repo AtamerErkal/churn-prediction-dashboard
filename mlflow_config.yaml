@@ -1,0 +1,43 @@
+# MLflow Configuration - GPU Accelerated
+experiment_name: "GPU_Accelerated_Churn_Prediction"
+tracking_uri: "./mlruns"
+artifact_location: "./mlruns"
+
+# Model Configuration  
+models_to_compare:
+  - Logistic_Regression_CPU
+  - Logistic_Regression_GPU  # RAPIDS cuML
+  - Random_Forest_CPU
+  - Random_Forest_GPU       # RAPIDS cuML
+  - Gradient_Boosting_CPU
+  - XGBoost_GPU             # GPU accelerated
+  - SVM_CPU
+  - SVM_GPU                 # RAPIDS cuML
+  - Decision_Tree
+  - Naive_Bayes
+
+# GPU Configuration
+gpu:
+  enabled: true
+  memory_fraction: 0.8
+  device_id: 0
+  
+# Data Configuration
+data:
+  train_test_split: 0.8
+  random_state: 42
+  use_smote: true
+  
+# Evaluation Metrics
+metrics:
+  primary: "roc_auc"
+  secondary: ["accuracy", "precision", "recall", "f1", "training_time"]
+  
+# Hyperparameter Tuning
+hyperparameter_tuning:
+  enabled: true
+  cv_folds: 5
+  cv_folds_gpu: 3  # GPU models use fewer folds (memory efficiency)
+  scoring: "roc_auc"
+  n_jobs: -1
+  n_jobs_gpu: 1    # GPU models use single thread
