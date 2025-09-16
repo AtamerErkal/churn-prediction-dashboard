@@ -201,9 +201,8 @@ class ChurnPredictionMLflow:
                     "model": XGBClassifier(
                         random_state=42, 
                         eval_metric='logloss',
-                        tree_method='gpu_hist',
-                        gpu_id=0
-                    ),
+                        device='cuda',
+                        ),
                     "params": {
                         "classifier__n_estimators": [100, 200],
                         "classifier__learning_rate": [0.1, 0.2],
@@ -342,6 +341,15 @@ class ChurnPredictionMLflow:
             else:
                 best_pipeline = pipeline
                 best_pipeline.fit(self.X_train, self.y_train)
+
+            try:
+                classifier = best_pipeline.named_steps.get('classifier')
+                if 'XGBClassifier' in str(type(classifier)) and hasattr(classifier, 'device') and classifier.device == 'cuda':
+                    print("   🔧 Converting trained XGBoost model to CPU version for deployment...")
+                    classifier.get_booster().set_param('device', 'cpu')
+                    print("   ✅ Model successfully converted to CPU version.")
+            except Exception as conversion_error:
+                print(f"   ⚠️ Could not convert model to CPU version: {conversion_error}")
             
             training_time = (pd.Timestamp.now() - start_time).total_seconds()
             print(f"   ⏱️ Eğitim süresi: {training_time:.2f} saniye")

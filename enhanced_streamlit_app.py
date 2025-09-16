@@ -158,10 +158,19 @@ st.set_page_config(
 # --- Load Functions ---
 @st.cache_resource
 def load_best_model():
-    """Load the best performing model"""
-    if os.path.exists(BEST_MODEL_PATH):
-        return joblib.load(BEST_MODEL_PATH)
-    return None
+    """Load the best performing model with error handling"""
+    try:
+        if os.path.exists(BEST_MODEL_PATH):
+            import warnings
+            warnings.filterwarnings('ignore')
+            return joblib.load(BEST_MODEL_PATH)
+        else:
+            st.error(f"Model file not found: {BEST_MODEL_PATH}")
+            return None
+    except Exception as e:
+        st.error(f"Model loading failed: {str(e)}")
+        st.info("Using fallback prediction system")
+        return None
 
 @st.cache_data
 def load_model_comparison():
@@ -169,6 +178,7 @@ def load_model_comparison():
     if os.path.exists(COMPARISON_REPORT_PATH):
         return pd.read_csv(COMPARISON_REPORT_PATH)
     return None
+
 
 # Load model and comparison data
 best_model = load_best_model()
