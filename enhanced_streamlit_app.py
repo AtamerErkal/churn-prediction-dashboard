@@ -9,6 +9,15 @@ import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
 import os
 
+
+# --- Page Config ---
+st.set_page_config(
+    page_title="Customer Churn Prediction Dashboard",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # --- Custom CSS for Professional Look ---
 st.markdown("""
 <style>
@@ -147,13 +156,6 @@ MODELS_DIR = "models"
 BEST_MODEL_PATH = os.path.join(MODELS_DIR, "best_churn_model.pkl")
 COMPARISON_REPORT_PATH = "reports/model_comparison.csv"
 
-# --- Page Config ---
-st.set_page_config(
-    page_title="Customer Churn Prediction Dashboard",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # --- Load Functions ---
 @st.cache_resource
