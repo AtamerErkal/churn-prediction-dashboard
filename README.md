@@ -2,13 +2,13 @@
 
 
 
-An advanced machine learning dashboard for predicting customer churn with real-time analytics.
+An advanced machine learning dashboard for predicting customer churn with real-time analytics. This is a demo work for MLOps trainig. And also I used mlflow for best model and metrics to track.
 
 
 
 \## 🚀 Live Demo
 
-\[Try the Dashboard](YOUR\_STREAMLIT\_URL\_HERE)
+\[Try the Dashboard] https://mlops-demo-churn-prediction.streamlit.app/
 
 
 
@@ -16,7 +16,7 @@ An advanced machine learning dashboard for predicting customer churn with real-t
 
 \- Interactive churn prediction
 
-\- Dynamic risk assessment  
+\- Dynamic risk assessment
 
 \- Professional analytics dashboard
 
