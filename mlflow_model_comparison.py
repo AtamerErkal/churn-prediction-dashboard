@@ -67,7 +67,7 @@ class ChurnPredictionMLflow:
         self.y_test = None
         
         # GPU availability check - DIRECTLY IN INIT
-        print("🔍 GPU durumu kontrol ediliyor...")
+        print("🔍 Checking GPU status...")
         self.gpu_available = {
             'cuda': False,
             'cuml': False,
@@ -280,14 +280,14 @@ class ChurnPredictionMLflow:
     
     def train_and_evaluate_model(self, model_name, model_config, use_smote=True):
         """Train and evaluate a single model - GPU optimized"""
-        print(f"\n🔄 {model_name} eğitiliyor...")
+        print(f"\n🔄 Training {model_name}...")
         
         # GPU memory cleanup if needed
         if 'GPU' in model_name and self.gpu_available.get('cuda', False):
             try:
                 import torch
                 torch.cuda.empty_cache()
-                print(f"🧹 GPU memory temizlendi")
+                print(f"🧹 GPU memory cleared")
             except:
                 pass
         
@@ -313,7 +313,7 @@ class ChurnPredictionMLflow:
             start_time = pd.Timestamp.now()
             
             if model_config["params"]:
-                print(f"   🎯 Hyperparameter tuning başlatılıyor...")
+                print(f"   🎯 Starting hyperparameter tuning...")
                 
                 # GPU models use fewer CV folds for memory efficiency
                 cv_folds = 3 if 'GPU' in model_name else 5
@@ -335,7 +335,7 @@ class ChurnPredictionMLflow:
                         mlflow.log_param(param, value)
                         
                 except Exception as e:
-                    print(f"   ⚠️ Grid search başarısız, default parametreler kullanılıyor: {e}")
+                    print(f"   ⚠️ Grid search failed, using default parameters: {e}")
                     best_pipeline = pipeline
                     best_pipeline.fit(self.X_train, self.y_train)
             else:
@@ -352,7 +352,7 @@ class ChurnPredictionMLflow:
                 print(f"   ⚠️ Could not convert model to CPU version: {conversion_error}")
             
             training_time = (pd.Timestamp.now() - start_time).total_seconds()
-            print(f"   ⏱️ Eğitim süresi: {training_time:.2f} saniye")
+            print(f"   ⏱️ Training time: {training_time:.2f} seconds")
             
             # Make predictions
             y_pred_train = best_pipeline.predict(self.X_train)
@@ -393,7 +393,7 @@ class ChurnPredictionMLflow:
                     if torch.cuda.is_available():
                         gpu_memory_used = torch.cuda.memory_allocated(0) / 1024**3
                         mlflow.log_metric("gpu_memory_used_gb", gpu_memory_used)
-                        print(f"   💾 GPU Memory kullanılan: {gpu_memory_used:.2f}GB")
+                        print(f"   💾 GPU Memory used: {gpu_memory_used:.2f}GB")
                 except:
                     pass
             
@@ -426,11 +426,11 @@ class ChurnPredictionMLflow:
                 best_model_path = "models/best_churn_model.pkl"
                 joblib.dump(best_pipeline, best_model_path)
             
-            print(f"   ✅ {model_name} tamamlandı!")
+            print(f"   ✅ {model_name} completed!")
             print(f"      - Test ROC AUC: {test_roc_auc:.4f}")
             print(f"      - Test Accuracy: {metrics['test_accuracy']:.4f}")
             print(f"      - Test F1: {metrics['test_f1']:.4f}")
-            print(f"      - Eğitim Süresi: {training_time:.2f}s")
+            print(f"      - Training Time: {training_time:.2f}s")
             
             # GPU memory cleanup
             if 'GPU' in model_name and self.gpu_available.get('cuda', False):
@@ -491,7 +491,7 @@ class ChurnPredictionMLflow:
     
     def run_model_comparison(self, data_path="data/raw/churn.csv"):
         """Run complete model comparison pipeline"""
-        print("🚀 MLflow Model Karşılaştırma Pipeline'ı Başlatılıyor")
+        print("🚀 Starting MLflow Model Comparison Pipeline")
         print("=" * 60)
         
         # Show GPU info
@@ -512,7 +512,7 @@ class ChurnPredictionMLflow:
         self.define_models()
         
         # Train all models
-        print(f"\n🤖 {len(self.model_configs)} farklı model eğitiliyor...")
+        print(f"\n🤖 Training {len(self.model_configs)} different models...")
         
         total_start_time = pd.Timestamp.now()
         successful_models = 0
@@ -538,7 +538,7 @@ class ChurnPredictionMLflow:
                         pass
                     
             except Exception as e:
-                print(f"❌ {model_name} eğitim hatası: {str(e)}")
+                print(f"❌ {model_name} training error: {str(e)}")
                 continue
         
         total_time = (pd.Timestamp.now() - total_start_time).total_seconds()
@@ -546,16 +546,16 @@ class ChurnPredictionMLflow:
         # Create comparison report
         self.create_comparison_report()
         
-        print(f"\n🏆 En İyi Model: {self.best_model}")
-        print(f"🎯 En İyi ROC AUC Skoru: {self.best_score:.4f}")
-        print(f"💾 En iyi model şuraya kaydedildi: models/best_churn_model.pkl")
-        print(f"⏱️ Toplam süre: {total_time/60:.1f} dakika")
-        print(f"✅ Başarılı modeller: {successful_models}/{len(self.model_configs)}")
+        print(f"\n🏆 Best Model: {self.best_model}")
+        print(f"🎯 Best ROC AUC Score: {self.best_score:.4f}")
+        print(f"💾 Best model saved to: models/best_churn_model.pkl")
+        print(f"⏱️ Total duration: {total_time/60:.1f} minutes")
+        print(f"✅ Successful models: {successful_models}/{len(self.model_configs)}")
         
         if self.gpu_available.get('cuda', False):
-            print(f"🎮 GPU kullanım istatistikleri MLflow'da görüntülenebilir")
+            print(f"🎮 GPU usage statistics can be viewed in MLflow")
         
-        print("\n✅ Model karşılaştırması tamamlandı!")
+        print("\n✅ Model comparison completed!")
         
         return self.best_model, self.best_score
     
@@ -647,18 +647,18 @@ def main():
     best_model, best_score = churn_pipeline.run_model_comparison("data/raw/churn.csv")
     
     print("\n" + "="*60)
-    print("🎉 PIPELINE BAŞARIYLA TAMAMLANDI!")
+    print("🎉 PIPELINE COMPLETED SUCCESSFULLY!")
     print("="*60)
-    print(f"🏆 En İyi Model: {best_model}")
-    print(f"🎯 En İyi ROC AUC: {best_score:.4f}")
-    print("\n📁 Oluşturulan Dosyalar:")
-    print("   - models/best_churn_model.pkl (En iyi model)")
-    print("   - models/*_model.pkl (Tüm eğitilmiş modeller)")
-    print("   - reports/model_comparison.csv (Karşılaştırma sonuçları)")
-    print("   - reports/model_comparison_plots.png (Görselleştirmeler)")
-    print("   - reports/*_confusion_matrix.png (Confusion matrixler)")
-    print("   - reports/*_roc_curve.png (ROC eğrileri)")
-    print("\n🔗 MLflow UI: 'mlflow ui' komutuyla detaylı sonuçları görüntüle")
+    print(f"🏆 Best Model: {best_model}")
+    print(f"🎯 Best ROC AUC: {best_score:.4f}")
+    print("\n📁 Generated Files:")
+    print("   - models/best_churn_model.pkl (Best model)")
+    print("   - models/*_model.pkl (All trained models)")
+    print("   - reports/model_comparison.csv (Comparison results)")
+    print("   - reports/model_comparison_plots.png (Visualizations)")
+    print("   - reports/*_confusion_matrix.png (Confusion matrices)")
+    print("   - reports/*_roc_curve.png (ROC curves)")
+    print("\n🔗 MLflow UI: View detailed results with the 'mlflow ui' command")
 
 
 if __name__ == "__main__":
