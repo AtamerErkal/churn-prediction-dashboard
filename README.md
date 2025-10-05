@@ -1,4 +1,4 @@
-\# 📊 Customer Churn Prediction Dashboard
+# 📊 Customer Churn Prediction Dashboard
 
 
 
@@ -6,29 +6,29 @@ An advanced machine learning dashboard for predicting customer churn with real-t
 
 
 
-\## 🚀 Live Demo
+## 🚀 Live Demo
 
-\[Try the Dashboard] https://mlops-demo-churn-prediction.streamlit.app/
-
-
-
-\## Features
-
-\- Interactive churn prediction
-
-\- Dynamic risk assessment
-
-\- Professional analytics dashboard
-
-\- MLflow model comparison
+[Try the Dashboard] https://mlops-demo-churn-prediction.streamlit.app/
 
 
 
-\## Usage
+## Features
 
-1\. Enter customer information
+- Interactive churn prediction
 
-2\. Set risk threshold
+- Dynamic risk assessment
 
-3\. Get instant prediction with recommendations
+- Professional analytics dashboard
+
+- MLflow model comparison
+
+
+
+## Usage
+
+1. Enter customer information
+
+2. Set risk threshold
+
+3. Get instant prediction with recommendations
 
